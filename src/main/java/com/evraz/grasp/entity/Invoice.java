@@ -7,15 +7,14 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "ORDER")
-public class Order {
+@Table(name = "INVOICE")
+public class Invoice {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Double paymentAmount;
 
-    @OneToMany
-    private List<OrderItem> items;
-
-    @OneToOne (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Invoice invoice;
+    @OneToOne(mappedBy = "invoice", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Order order;
 }

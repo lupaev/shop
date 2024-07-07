@@ -4,11 +4,6 @@ import java.util.List;
 
 public class ShoppingCart {
 
-    private List<Order> orders;
+    private Order order;
 
-    public Order createOrder() {
-        Order order = new Order();
-        orders.add(order);
-        return order;
-    }
 }
