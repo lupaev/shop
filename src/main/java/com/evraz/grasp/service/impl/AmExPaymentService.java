@@ -1,6 +1,5 @@
 package com.evraz.grasp.service.impl;
 
-import com.evraz.grasp.dto.PaymentDetailsDTO;
 import com.evraz.grasp.entity.PaymentDetails;
 import com.evraz.grasp.entity.PaymentResult;
 import com.evraz.grasp.service.PaymentService;
@@ -9,7 +8,8 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class MockPaymentService implements PaymentService {
+public class AmExPaymentService implements PaymentService {
+
     @Override
     public PaymentResult processPayment(PaymentDetails paymentDetails) {
         // Имитация успешного платежа

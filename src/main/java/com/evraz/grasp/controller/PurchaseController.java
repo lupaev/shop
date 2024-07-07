@@ -1,6 +1,7 @@
 package com.evraz.grasp.controller;
 
 import com.evraz.grasp.dto.InvoiceDTO;
+import com.evraz.grasp.dto.OrderDTO;
 import com.evraz.grasp.dto.ShoppingCartDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PurchaseController {
 
     @PostMapping
-    public ResponseEntity<InvoiceDTO> createOrder(@Validated @RequestBody ShoppingCartDTO shoppingCartDTO) {
+    public ResponseEntity<InvoiceDTO> createOrder(@Validated @RequestBody OrderDTO orderDTO) {
 
 //        return new ResponseEntity<>(, HttpStatus.CREATED);
         return null;
