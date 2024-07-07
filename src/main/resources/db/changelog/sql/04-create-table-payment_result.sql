@@ -1,0 +1,13 @@
+--liquibase formatted sql
+
+--changeset sergej:1
+CREATE TABLE PAYMENT_RESULT
+(
+    ID                      BIGSERIAL                     PRIMARY KEY,
+    IS_SUCCESSFUL           BOOLEAN,
+    TRANSACTION_NUMBER      VARCHAR,
+    ERROR_MESSAGE           VARCHAR
+);
+
+--changeset sergej:2
+ALTER TABLE INVOICE ADD CONSTRAINT FK_PAYMENT_RESULT_ID FOREIGN KEY (PAYMENT_RESULT_ID) REFERENCES PAYMENT_RESULT (ID);

@@ -17,4 +17,7 @@ public class Invoice {
 
     @OneToOne(mappedBy = "invoice", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Order order;
+
+    @OneToOne
+    private PaymentResult paymentResult;
 }

@@ -1,0 +1,14 @@
+--liquibase formatted sql
+
+--changeset sergej:1
+CREATE TABLE INVOICE
+(
+    ID                      BIGSERIAL                     PRIMARY KEY,
+    PAYMENT_AMOUNT          NUMERIC,
+    ORDER_ID                BIGINT,
+    PAYMENT_RESULT_ID       BIGINT,
+    CONSTRAINT FK_ORDER_ID FOREIGN KEY (ORDER_ID) REFERENCES ORDER (ID)
+);
+
+--changeset sergej:2
+ALTER TABLE ORDER ADD CONSTRAINT FK_INVOICE_ID FOREIGN KEY (INVOICE_ID) REFERENCES INVOICE (ID);
