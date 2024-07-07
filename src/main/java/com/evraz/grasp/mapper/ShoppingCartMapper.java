@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {PaymentDetailsMapper.class, OrderMapper.class})
 public interface ShoppingCartMapper {
     ShoppingCartDTO convertToShoppingCartDTO(ShoppingCart shoppingCart);
     ShoppingCart convertToShoppingCart(ShoppingCartDTO shoppingCartDTO);
