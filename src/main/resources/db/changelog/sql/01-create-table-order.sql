@@ -1,9 +1,8 @@
 --liquibase formatted sql
 
 --changeset sergej:1
-CREATE TABLE ORDER
+CREATE TABLE ORDERS
 (
-    ID             BIGSERIAL                      PRIMARY KEY,
-    ORDER_ITEM_ID  BIGINT                         NOT NULL,
-    INVOICE_ID     BIGINT                         NOT NULL
+    ID               BIGSERIAL                      PRIMARY KEY,
+    INVOICE_ID       BIGINT                         NOT NULL
 );

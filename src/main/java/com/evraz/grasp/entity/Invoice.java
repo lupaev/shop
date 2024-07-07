@@ -16,8 +16,10 @@ public class Invoice {
     private Double paymentAmount;
 
     @OneToOne(mappedBy = "invoice", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "ORDERS_ID")
     private Order order;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "PAYMENT_RESULT_ID")
     private PaymentResult paymentResult;
 }
