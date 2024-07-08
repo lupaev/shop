@@ -16,7 +16,4 @@ public class Order {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "order")
     private List<OrderItem> items;
 
-    @OneToOne (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "INVOICE_ID")
-    private Invoice invoice;
 }

@@ -4,13 +4,7 @@ import lombok.Data;
 
 @Data
 public class PaymentResultDTO {
-    private boolean isSuccessful;
-    private String transactionId;
+    private boolean successful;
+    private String transactionNumber;
     private String errorMessage;
-
-
-    public PaymentResultDTO(boolean successful, String transactionId) {
-        this.isSuccessful = successful;
-        this.transactionId = transactionId;
-    }
 }

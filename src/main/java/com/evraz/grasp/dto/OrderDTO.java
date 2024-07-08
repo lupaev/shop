@@ -10,6 +10,5 @@ public class OrderDTO {
 
     @NotNull
     private List<OrderItemDTO> items;
-    @NotNull
-    private PaymentDetailsDTO paymentDetailsDTO;
+
 }

@@ -4,7 +4,7 @@
 CREATE TABLE PAYMENT_RESULT
 (
     ID                      BIGSERIAL                     PRIMARY KEY,
-    IS_SUCCESSFUL           BOOLEAN,
+    SUCCESSFUL              BOOLEAN,
     TRANSACTION_NUMBER      VARCHAR,
     ERROR_MESSAGE           VARCHAR
 );

@@ -2,10 +2,11 @@ package com.evraz.grasp.facade;
 
 import com.evraz.grasp.dto.InvoiceDTO;
 import com.evraz.grasp.dto.ShoppingCartDTO;
-import com.evraz.grasp.entity.Order;
-import com.evraz.grasp.entity.OrderItem;
-import com.evraz.grasp.entity.ShoppingCart;
+import com.evraz.grasp.entity.*;
+import com.evraz.grasp.exception.NotEnoughQuantityException;
+import com.evraz.grasp.mapper.InvoiceMapper;
 import com.evraz.grasp.mapper.ShoppingCartMapper;
+import com.evraz.grasp.repository.InvoiceRepository;
 import com.evraz.grasp.repository.OrderItemRepository;
 import com.evraz.grasp.repository.OrderRepository;
 import com.evraz.grasp.service.OrderService;
@@ -25,10 +26,12 @@ import org.springframework.stereotype.Service;
 public class OrderFacade {
 
     private final OrderRepository orderRepository;
+    private final InvoiceRepository invoiceRepository;
     private final OrderItemRepository orderItemRepository;
     private final PaymentProcessor paymentProcessor;
     private final OrderService orderService;
     private final ShoppingCartMapper shoppingCartMapper;
+    private final InvoiceMapper invoiceMapper;
 
 
     public InvoiceDTO processOrder(ShoppingCartDTO shoppingCartDTO) {
@@ -36,18 +39,28 @@ public class OrderFacade {
         ShoppingCart shoppingCart = shoppingCartMapper.convertToShoppingCart(shoppingCartDTO);
 
         Order order = shoppingCart.getOrder();
+        PaymentDetails paymentDetails = shoppingCart.getPaymentDetails();
 
         int sumOfOrder = order.getItems().stream().mapToInt(OrderItem::getQuantity).sum();
 
         Integer sumOfQuantities = orderItemRepository.sumOfQuantities();
 
-        if (sumOfOrder > sumOfQuantities) {
-            throw new RuntimeException();
-        } else {
+        PaymentResult paymentResult;
 
+        if (sumOfQuantities == null || sumOfOrder > sumOfQuantities) {
+            throw new NotEnoughQuantityException("Not enough quantities");
+        } else {
+            paymentResult = paymentProcessor.process(paymentDetails);
         }
 
-        return  null;
+        Invoice invoice = orderService.getInvoice(order, paymentResult);
+
+        //invice
+            //  order
+                //OrderItem
+            //paymentResult
+
+        return  invoiceMapper.toDTO(invoice);
     }
 
 }
