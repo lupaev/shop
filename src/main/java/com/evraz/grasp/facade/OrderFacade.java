@@ -9,6 +9,7 @@ import com.evraz.grasp.mapper.ShoppingCartMapper;
 import com.evraz.grasp.repository.InvoiceRepository;
 import com.evraz.grasp.repository.OrderItemRepository;
 import com.evraz.grasp.repository.OrderRepository;
+import com.evraz.grasp.repository.PaymentResultRepository;
 import com.evraz.grasp.service.OrderService;
 import com.evraz.grasp.service.PaymentProcessor;
 import com.evraz.grasp.service.PaymentService;
@@ -21,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class OrderFacade {
@@ -28,6 +31,7 @@ public class OrderFacade {
     private final OrderRepository orderRepository;
     private final InvoiceRepository invoiceRepository;
     private final OrderItemRepository orderItemRepository;
+    private final PaymentResultRepository paymentResultRepository;
     private final PaymentProcessor paymentProcessor;
     private final OrderService orderService;
     private final ShoppingCartMapper shoppingCartMapper;
@@ -41,7 +45,8 @@ public class OrderFacade {
         Order order = shoppingCart.getOrder();
         PaymentDetails paymentDetails = shoppingCart.getPaymentDetails();
 
-        int sumOfOrder = order.getItems().stream().mapToInt(OrderItem::getQuantity).sum();
+        List<OrderItem> items = order.getItems();
+        int sumOfOrder = items.stream().mapToInt(OrderItem::getQuantity).sum();
 
         Integer sumOfQuantities = orderItemRepository.sumOfQuantities();
 
@@ -54,6 +59,12 @@ public class OrderFacade {
         }
 
         Invoice invoice = orderService.getInvoice(order, paymentResult);
+        invoiceRepository.save(invoice);
+
+        items.stream().forEach(orderItem -> orderItem.setOrder(order));
+        orderItemRepository.saveAll(items);
+        orderRepository.save(order);
+        paymentResultRepository.save(paymentResult);
 
         //invice
             //  order
