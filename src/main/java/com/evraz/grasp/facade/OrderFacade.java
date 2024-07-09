@@ -12,14 +12,7 @@ import com.evraz.grasp.repository.OrderRepository;
 import com.evraz.grasp.repository.PaymentResultRepository;
 import com.evraz.grasp.service.OrderService;
 import com.evraz.grasp.service.PaymentProcessor;
-import com.evraz.grasp.service.PaymentService;
-import com.evraz.grasp.specification.OrderItemSpecification;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,39 +32,46 @@ public class OrderFacade {
 
 
     public InvoiceDTO processOrder(ShoppingCartDTO shoppingCartDTO) {
-
         ShoppingCart shoppingCart = shoppingCartMapper.convertToShoppingCart(shoppingCartDTO);
-
         Order order = shoppingCart.getOrder();
-        PaymentDetails paymentDetails = shoppingCart.getPaymentDetails();
 
-        List<OrderItem> items = order.getItems();
-        int sumOfOrder = items.stream().mapToInt(OrderItem::getQuantity).sum();
+        validateOrderItems(order);
 
-        Integer sumOfQuantities = orderItemRepository.sumOfQuantities();
+        PaymentResult paymentResult = processPayment(shoppingCart.getPaymentDetails());
 
-        PaymentResult paymentResult;
+        Invoice invoice = createAndSaveInvoice(order, paymentResult);
 
-        if (sumOfQuantities == null || sumOfOrder > sumOfQuantities) {
-            throw new NotEnoughQuantityException("Not enough quantities");
-        } else {
-            paymentResult = paymentProcessor.process(paymentDetails);
-        }
-
-        Invoice invoice = orderService.getInvoice(order, paymentResult);
-        invoiceRepository.save(invoice);
-
-        items.stream().forEach(orderItem -> orderItem.setOrder(order));
-        orderItemRepository.saveAll(items);
+        updateOrderItems(order);
         orderRepository.save(order);
         paymentResultRepository.save(paymentResult);
 
-        //invice
-            //  order
-                //OrderItem
-            //paymentResult
+        return invoiceMapper.toDTO(invoice);
+    }
 
-        return  invoiceMapper.toDTO(invoice);
+
+    private void validateOrderItems(Order order) {
+        //Имитация проверки кол-ва товаров на складе
+        int sumOfOrder = order.getItems().stream().mapToInt(OrderItem::getQuantity).sum();
+        Integer sumOfQuantities = orderItemRepository.sumOfQuantities();
+        if (sumOfQuantities == null || sumOfOrder > sumOfQuantities) {
+            throw new NotEnoughQuantityException("Not enough quantities");
+        }
+    }
+
+    private PaymentResult processPayment(PaymentDetails paymentDetails) {
+        return paymentProcessor.process(paymentDetails);
+    }
+
+    private Invoice createAndSaveInvoice(Order order, PaymentResult paymentResult) {
+        Invoice invoice = orderService.getInvoice(order, paymentResult);
+        invoiceRepository.save(invoice);
+        return invoice;
+    }
+
+    private void updateOrderItems(Order order) {
+        List<OrderItem> items = order.getItems();
+        items.forEach(orderItem -> orderItem.setOrder(order));
+        orderItemRepository.saveAll(items);
     }
 
 }

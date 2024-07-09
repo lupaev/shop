@@ -11,10 +11,5 @@ public interface PaymentResultMapper {
     @Mapping(target = "successful", source = "successful")
     @Mapping(target = "transactionNumber", source = "transactionNumber")
     @Mapping(target = "errorMessage", source = "errorMessage")
-    PaymentResult toEntity(PaymentResultDTO paymentResultDTO);
-
-    @Mapping(target = "successful", source = "successful")
-    @Mapping(target = "transactionNumber", source = "transactionNumber")
-    @Mapping(target = "errorMessage", source = "errorMessage")
     PaymentResultDTO toDto(PaymentResult paymentResult);
 }

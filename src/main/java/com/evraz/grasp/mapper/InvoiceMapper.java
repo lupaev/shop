@@ -12,6 +12,5 @@ public interface InvoiceMapper {
     @Mapping(target = "paymentResultDTO", source = "paymentResult")
     @Mapping(target = "paymentAmount", source = "paymentAmount")
     InvoiceDTO toDTO(Invoice invoice);
-    Invoice toEntity(InvoiceDTO invoiceDTO);
 
 }

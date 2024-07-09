@@ -1,7 +1,6 @@
 package com.evraz.grasp.controller;
 
 import com.evraz.grasp.dto.InvoiceDTO;
-import com.evraz.grasp.dto.OrderDTO;
 import com.evraz.grasp.dto.ShoppingCartDTO;
 import com.evraz.grasp.facade.OrderFacade;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PurchaseController {
     private final OrderFacade orderFacade;
 
-    @PostMapping
+    @PostMapping("/order")
     public ResponseEntity<InvoiceDTO> createOrder(@Validated @RequestBody ShoppingCartDTO shoppingCartDTO) {
         return ResponseEntity.ok(orderFacade.processOrder(shoppingCartDTO));
     }
