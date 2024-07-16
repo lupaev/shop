@@ -32,7 +32,7 @@ public class OrderFacade {
 
 
     public InvoiceDTO processOrder(ShoppingCartDTO shoppingCartDTO) {
-        ShoppingCart shoppingCart = shoppingCartMapper.convertToShoppingCart(shoppingCartDTO);
+        com.evraz.grasp.entity.ShoppingCart shoppingCart = shoppingCartMapper.convertToShoppingCart(shoppingCartDTO);
         Order order = shoppingCart.getOrder();
 
         validateOrderItems(order);
