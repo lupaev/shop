@@ -3,6 +3,7 @@ package com.evraz.grasp.service;
 import com.evraz.grasp.entity.PaymentDetails;
 import com.evraz.grasp.entity.PaymentResult;
 import com.evraz.grasp.entity.PaymentType;
+import com.evraz.grasp.exception.PaymentException;
 import com.evraz.grasp.service.impl.AmExPaymentService;
 import com.evraz.grasp.service.impl.MasterCardPaymentService;
 import com.evraz.grasp.service.impl.MirPaymentService;
@@ -28,7 +29,7 @@ public class PaymentProcessor {
         PaymentType paymentType = paymentDetails.getPaymentType();
         PaymentService service = paymentServices.get(paymentType);
         if (service == null) {
-            throw new IllegalArgumentException("Unsupported payment type: " + paymentType);
+            throw new PaymentException("Unsupported payment type: " + paymentType);
         }
         return service.processPayment(paymentDetails);
     }
