@@ -1,8 +1,11 @@
 package com.evraz.shop.entity;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ShoppingCart {
 
     private Order order;

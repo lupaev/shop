@@ -1,9 +1,12 @@
 package com.evraz.shop.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "INVOICE")
 public class Invoice {
