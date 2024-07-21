@@ -23,4 +23,10 @@ public class GlobalExceptionHandler {
         ErrorDetails errorDetails = new ErrorDetails(LocalDate.now(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(InvalidPaymentDetailsException.class)
+    public ResponseEntity<ErrorDetails> handlePaymentDetailsException(InvalidPaymentDetailsException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(LocalDate.now(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
 }

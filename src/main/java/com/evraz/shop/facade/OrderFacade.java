@@ -11,6 +11,7 @@ import com.evraz.shop.repository.OrderItemRepository;
 import com.evraz.shop.repository.OrderRepository;
 import com.evraz.shop.repository.PaymentResultRepository;
 import com.evraz.shop.service.OrderService;
+import com.evraz.shop.service.PaymentDetailsValidator;
 import com.evraz.shop.service.PaymentProcessor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,16 +32,20 @@ public class OrderFacade {
     private final OrderService orderService;
     private final ShoppingCartMapper shoppingCartMapper;
     private final InvoiceMapper invoiceMapper;
+    private final PaymentDetailsValidator paymentDetailsValidator;
 
 
     public InvoiceDTO processOrder(ShoppingCartDTO shoppingCartDTO) {
         log.info("Processing order for shopping cart: {}", shoppingCartDTO);
-        com.evraz.shop.entity.ShoppingCart shoppingCart = shoppingCartMapper.convertToShoppingCart(shoppingCartDTO);
+        ShoppingCart shoppingCart = shoppingCartMapper.convertToShoppingCart(shoppingCartDTO);
         Order order = shoppingCart.getOrder();
+        PaymentDetails paymentDetails = shoppingCart.getPaymentDetails();
+
+        paymentDetailsValidator.validate(paymentDetails);
 
         validateOrderItems(order);
 
-        PaymentResult paymentResult = processPayment(shoppingCart.getPaymentDetails());
+        PaymentResult paymentResult = processPayment(paymentDetails);
 
         Invoice invoice = createAndSaveInvoice(order, paymentResult);
 
