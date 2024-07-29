@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PaymentProcessor {
-    private PaymentServiceFactory factory = new BankPaymentServiceFactory();
+    private final PaymentServiceFactory factory = new BankPaymentServiceFactory();
 
     public PaymentResult process(PaymentDetails paymentDetails) {
         PaymentType paymentType = paymentDetails.getPaymentType();
