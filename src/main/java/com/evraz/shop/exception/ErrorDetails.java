@@ -1,10 +1,12 @@
 package com.evraz.shop.exception;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.time.LocalDate;
 
 @AllArgsConstructor
+@Getter
 public class ErrorDetails {
 
     private LocalDate timestamp;
