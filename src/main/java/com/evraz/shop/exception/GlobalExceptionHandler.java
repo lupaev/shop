@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
         if (ex.getCause() != null) {
             return ex.getCause().getMessage();
         }
-        return "Нет дополнительных деталей исключения";
+        return "There are no additional exception details";
 
     }
 }
