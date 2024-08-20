@@ -24,14 +24,14 @@ public class OrderItem implements Cloneable{
     private Order order;
 
 
-    @Override
-    public OrderItem clone() {
-        try {
-            return (OrderItem) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
-    }
+//    @Override
+//    public OrderItem clone() {
+//        try {
+//            return (OrderItem) super.clone();
+//        } catch (CloneNotSupportedException e) {
+//            throw new AssertionError();
+//        }
+//    }
 
 
 }
