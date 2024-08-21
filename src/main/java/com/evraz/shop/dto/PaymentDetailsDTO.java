@@ -2,13 +2,15 @@ package com.evraz.shop.dto;
 
 import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDate;
+
 public record PaymentDetailsDTO(
         @NotNull
         String creditCardNumber,
         @NotNull
         String cvv,
         @NotNull
-        String expirationDate,
+        LocalDate expirationDate,
         @NotNull
         String cardholderName)
 {}

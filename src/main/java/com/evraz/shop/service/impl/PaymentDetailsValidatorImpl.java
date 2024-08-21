@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.CreditCardValidator;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 @Slf4j
 public class PaymentDetailsValidatorImpl implements PaymentDetailsValidator {
@@ -23,18 +25,51 @@ public class PaymentDetailsValidatorImpl implements PaymentDetailsValidator {
 
     private void validateCreditCardNumber(String creditCardNumber) {
         log.debug("Validating credit card number: {}", creditCardNumber);
+
         if (creditCardNumber == null || creditCardNumber.isEmpty()) {
             log.error("Credit card number is required");
             throw new InvalidPaymentDetailsException("Credit card number is required");
         }
 
-        CreditCardValidator creditCardValidator = new CreditCardValidator(
-                CreditCardValidator.AMEX + CreditCardValidator.VISA + CreditCardValidator.MASTERCARD);
-        if (!creditCardValidator.isValid(creditCardNumber)) {
+        // Удаляем все пробелы и дефисы
+        creditCardNumber = creditCardNumber.replaceAll("[\\s-]", "");
+
+        // Проверяем, что номер состоит только из цифр
+        if (!creditCardNumber.matches("\\d+")) {
+            log.error("Credit card number must contain only digits: {}", creditCardNumber);
+            throw new InvalidPaymentDetailsException("Credit card number must contain only digits");
+        }
+
+        // Проверяем длину номера карты
+        if (creditCardNumber.length() < 13 || creditCardNumber.length() > 19) {
+            log.error("Credit card number must be between 13 and 19 digits: {}", creditCardNumber);
+            throw new InvalidPaymentDetailsException("Credit card number must be between 13 and 19 digits");
+        }
+
+        // Проверка по алгоритму Луна
+        if (!isValidLuhn(creditCardNumber)) {
             log.error("Invalid credit card number: {}", creditCardNumber);
             throw new InvalidPaymentDetailsException("Invalid credit card number");
         }
+
         log.debug("Credit card number is valid");
+    }
+
+    private boolean isValidLuhn(String creditCardNumber) {
+        int sum = 0;
+        boolean alternate = false;
+        for (int i = creditCardNumber.length() - 1; i >= 0; i--) {
+            int n = Integer.parseInt(creditCardNumber.substring(i, i + 1));
+            if (alternate) {
+                n *= 2;
+                if (n > 9) {
+                    n -= 9;
+                }
+            }
+            sum += n;
+            alternate = !alternate;
+        }
+        return sum % 10 == 0;
     }
 
     private void validateCVV(String cvv) {
@@ -51,29 +86,21 @@ public class PaymentDetailsValidatorImpl implements PaymentDetailsValidator {
         log.debug("CVV is valid");
     }
 
-    private void validateExpirationDate(String expirationDate) {
+    private void validateExpirationDate(LocalDate expirationDate) {
         log.debug("Validating expiration date: {}", expirationDate);
-        if (expirationDate == null || expirationDate.isEmpty()) {
+
+        if (expirationDate == null) {
             log.error("Expiration date is required");
             throw new InvalidPaymentDetailsException("Expiration date is required");
         }
 
-        if (!expirationDate.matches("(0[1-9]|1[0-2])/\\d{2}")) {
-            log.error("Invalid expiration date format: {}", expirationDate);
-            throw new InvalidPaymentDetailsException("Invalid expiration date format");
-        }
+        LocalDate currentDate = LocalDate.now();
 
-        String[] parts = expirationDate.split("/");
-        int month = Integer.parseInt(parts[0]);
-        int year = Integer.parseInt(parts[1]) + 2000;
-
-        java.time.YearMonth currentYearMonth = java.time.YearMonth.now();
-        java.time.YearMonth cardYearMonth = java.time.YearMonth.of(year, month);
-
-        if (cardYearMonth.isBefore(currentYearMonth)) {
+        if (expirationDate.isBefore(currentDate)) {
             log.error("Credit card is expired: {}", expirationDate);
             throw new InvalidPaymentDetailsException("Credit card is expired");
         }
+
         log.debug("Expiration date is valid");
     }
 

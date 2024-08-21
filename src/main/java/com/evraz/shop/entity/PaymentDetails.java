@@ -2,6 +2,8 @@ package com.evraz.shop.entity;
 
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -9,7 +11,7 @@ import lombok.*;
 public class PaymentDetails {
     private String creditCardNumber;
     private String cvv;
-    private String expirationDate;
+    private LocalDate expirationDate;
     private String cardholderName;
     private PaymentType paymentType;
 
