@@ -3,6 +3,7 @@ package com.github.lupaev.shop.controller;
 import com.github.lupaev.shop.dto.InvoiceDTO;
 import com.github.lupaev.shop.dto.ShoppingCartDTO;
 import com.github.lupaev.shop.facade.OrderFacade;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,7 +17,7 @@ public class PurchaseController {
     private final OrderFacade orderFacade;
 
     @PostMapping("/order")
-    public ResponseEntity<InvoiceDTO> createOrder(@Validated @RequestBody ShoppingCartDTO shoppingCartDTO) {
+    public ResponseEntity<InvoiceDTO> createOrder(@Valid @RequestBody ShoppingCartDTO shoppingCartDTO) {
         return ResponseEntity.ok(orderFacade.processOrder(shoppingCartDTO));
     }
 }
